@@ -1,0 +1,19 @@
+{
+  "name": "socket_redis_01",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.2",
+    "pm2": "^5.1.2",
+    "socket.io-redis": "^6.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pm2 start processes.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

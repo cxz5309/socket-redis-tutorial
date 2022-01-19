@@ -1,0 +1,136 @@
+body {
+  background-color: black;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+}
+.form_welcome {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+}
+.title {
+  color: #358cff;
+  font-size: 30px;
+}
+.form_input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.form_input input {
+  padding: 8px 12px;
+  border: none;
+  margin-bottom: 5px;
+}
+
+.main_call {
+  display: flex;
+  height: 100vh;
+}
+
+.main_Right {
+  display: flex;
+  flex-direction: column;
+  flex: 0.8;
+}
+#myStream {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+#myFace {
+  margin-right: 20px;
+}
+.main_Left {
+  display: flex;
+  flex-direction: column;
+  flex: 0.2;
+}
+.buttons {
+  background-color: #1c1e20;
+  color: white;
+  display: flex;
+  justify-content: space-around;
+}
+button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 10px;
+  min-width: 80px;
+  cursor: pointer;
+  border: none;
+  background-color: #f8d210;
+  color: white;
+}
+button i {
+  font-size: 24px;
+}
+
+button:hover {
+  background-color: #343434;
+  border-radius: 5px;
+}
+
+.chat_window {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.chat_title {
+  color: white;
+  font-size: 24px;
+  text-align: center;
+}
+.chat_message {
+  padding: 12px 12px;
+  display: flex;
+}
+li {
+  color: white;
+  list-style: none;
+  border-radius: 15px 10px 15px 10px;
+  padding: 8px 5px;
+  margin-bottom: 5px;
+}
+h6 {
+  margin: 0;
+  padding-bottom: 3px;
+}
+.left {
+  text-align: start;
+  background-color: darkgray;
+}
+.right {
+  text-align: end;
+  background-color: #f8d210;
+}
+#message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.chat_message input {
+  flex-grow: 1;
+  height: 100%;
+  background-color: transparent;
+  border: none;
+  color: #f5f5f5;
+}
+#send {
+  border: none;
+  padding: 8px 5px;
+  min-width: 50px;
+  background-color: #f8d210;
+}
+#send i {
+  font-size: 14px;
+  color: white;
+}
