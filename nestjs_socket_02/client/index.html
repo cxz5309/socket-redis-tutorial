@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      body {
+        display: flex;
+        margin: 0;
+        padding-bottom: 3rem;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+
+      #form1 {
+        background: rgba(0, 0, 0, 0.15);
+        padding: 0.25rem;
+        position: fixed;
+        bottom: 0;
+        display: flex;
+        height: 3rem;
+        box-sizing: border-box;
+        backdrop-filter: blur(10px);
+      }
+
+      #form2 {
+        background: rgba(0, 0, 0, 0.15);
+        padding: 0.25rem;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        height: 3rem;
+        box-sizing: border-box;
+        backdrop-filter: blur(10px);
+      }
+
+      #input1 {
+        border: none;
+        padding: 0 1rem;
+        flex-grow: 1;
+        border-radius: 2rem;
+        margin: 0.25rem;
+      }
+
+      #input1:focus {
+        outline: none;
+      }
+
+      #input2 {
+        border: none;
+        padding: 0 1rem;
+        flex-grow: 1;
+        border-radius: 2rem;
+        margin: 0.25rem;
+      }
+
+      #input2:focus {
+        outline: none;
+      }
+
+      #form1 > button {
+        background: #333;
+        border: none;
+        padding: 0 1rem;
+        margin: 0.25rem;
+        border-radius: 3px;
+        outline: none;
+        color: #fff;
+      }
+
+      #form2 > button {
+        background: #333;
+        border: none;
+        padding: 0 1rem;
+        margin: 0.25rem;
+        border-radius: 3px;
+        outline: none;
+        color: #fff;
+      }
+
+      .messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .messages > li {
+        padding: 0.5rem 1rem;
+      }
+
+      .messages > li:nth-child(odd) {
+        background: #efefef;
+      }
+
+      #flex {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+      }
+
+      #head {
+        display: flex;
+        flex-direction: column;
+        width: auto;
+        height: 50%;
+        background-color: red;
+      }
+
+      #foot {
+        display: flex;
+        width: auto;
+        height: 50%;
+      }
+
+      .chat {
+        align-items: stretch;
+        justify-content: center;
+        width: 50%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="flex">
+      <div id="head">
+        <input id="createroom" type="button" value="createroom" />
+        <p id="rooms_name">room name:</p>
+      </div>
+      <div id="foot">
+        <div class="chat" id="user1">
+          <input id="join_room_1" type="button" value="join room1" />
+          <input id="leave_room_1" type="button" value="leave room1" />
+          <ul class="messages" id="msg1">
+            채팅방1
+          </ul>
+          <form id="form1" action="">
+            <input id="input1" autocomplete="off" /><button>Send</button>
+          </form>
+        </div>
+        <div class="chat" id="user2">
+          <input id="join_room_2" type="button" value="join room2" />
+          <input id="leave_room_2" type="button" value="leave room2" />
+          <ul class="messages" id="msg2">
+            채팅방2
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+
+      var msg1 = document.getElementById('msg1');
+      var msg2 = document.getElementById('msg2');
+      var form1 = document.getElementById('form1');
+      // var form2 = document.getElementById('form2');
+      var input1 = document.getElementById('input1');
+      // var input2 = document.getElementById('input2');
+      var createRoomBtn = document.getElementById('createroom');
+      var joinRoom1Btn = document.getElementById('join_room_1');
+      var joinRoom2Btn = document.getElementById('join_room_2');
+      var leaveRoom1Btn = document.getElementById('leave_room_1');
+      var leaveRoom2Btn = document.getElementById('leave_room_2');
+      var roomsName = document.getElementById('rooms_name');
+
+      const roomName1 = 'room1';
+      const roomName2 = 'room2';
+
+      form1.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (input1.value) {
+          socket.emit('chat', input1.value);
+          input1.value = '';
+        }
+      });
+      // form2.addEventListener('submit', function (e) {
+      //   e.preventDefault();
+      //   if (input2.value) {
+      //     socket.emit('chat', input2.value);
+      //     input2.value = '';
+      //   }
+      // });
+
+      createRoomBtn.addEventListener('click', (e) => {
+        console.log(`create Room!!`);
+        e.preventDefault();
+        socket.emit('createRoom');
+      });
+
+      joinRoom1Btn.addEventListener('click', (e) => {
+        console.log(`join ${roomName1} Room!!`);
+        e.preventDefault();
+        socket.emit('joinRoom', roomName1);
+      });
+
+      joinRoom2Btn.addEventListener('click', (e) => {
+        console.log(`join ${roomName2} Room!!`);
+        e.preventDefault();
+        socket.emit('joinRoom', roomName2);
+      });
+
+      leaveRoom1Btn.addEventListener('click', (e) => {
+        console.log(`leave ${roomName1} Room!!`);
+        e.preventDefault();
+        socket.emit('leaveRoom', roomName1);
+      });
+
+      leaveRoom2Btn.addEventListener('click', (e) => {
+        console.log(`leave ${roomName2} Room!!`);
+        e.preventDefault();
+        socket.emit('leaveRoom', roomName2);
+      });
+
+      socket.on('joinRoomRes', (data) => {
+        console.log('joinRoomRes!');
+        const { room, msg } = data;
+        if (room === roomName1) {
+          var item1 = document.createElement('li');
+          item1.textContent = `room msg: ${msg}`;
+          msg1.appendChild(item1);
+          window.scrollTo(0, document.body.scrollHeight);
+        } else {
+          var item2 = document.createElement('li');
+          item2.textContent = `room msg: ${msg}`;
+          msg2.appendChild(item2);
+          window.scrollTo(0, document.body.scrollHeight);
+        }
+      });
+
+      socket.on('leaveRoomRes', (data) => {
+        console.log('leaveRoomRes!');
+        const { room, msg } = data;
+        if (room === roomName1) {
+          var item1 = document.createElement('li');
+          item1.textContent = `room msg: ${msg}`;
+          msg1.appendChild(item1);
+          window.scrollTo(0, document.body.scrollHeight);
+        } else {
+          var item2 = document.createElement('li');
+          item2.textContent = `room msg: ${msg}`;
+          msg2.appendChild(item2);
+          window.scrollTo(0, document.body.scrollHeight);
+        }
+      });
+
+      socket.on('chatRes', (data) => {
+        console.log('chatRes!');
+        const { room, msg } = data;
+        if (room === roomName1) {
+          var item1 = document.createElement('li');
+          item1.textContent = `room msg: ${msg}`;
+          msg1.appendChild(item1);
+          window.scrollTo(0, document.body.scrollHeight);
+        } else {
+          var item2 = document.createElement('li');
+          item2.textContent = `room msg: ${msg}`;
+          msg2.appendChild(item2);
+          window.scrollTo(0, document.body.scrollHeight);
+        }
+      });
+    </script>
+  </body>
+</html>
